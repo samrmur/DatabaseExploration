@@ -1,20 +1,21 @@
 package com.uwo.databaseexploration.repository.realm
 
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
-data class Customer(
-    val id: String,
-    val firstName: String,
-    val lastName: String,
-    val phone: String,
-    val company: String,
-    val streetAddress: String,
-    val city: String,
-    val region: String,
-    val country: String,
-    val postalCode: String,
-    val totalSpent: String,
-    val totalOrders: Int,
-    val acceptsMarketing: Boolean,
-    val taxExempt: Boolean
-): RealmObject()
+open class Customer(
+    @PrimaryKey var id: String = "",
+    var firstName: String = "",
+    var lastName: String = "",
+    var phone: String = "",
+    var company: String = "",
+    var streetAddress: String = "",
+    var city: String = "",
+    var region: String = "",
+    var country: String = "",
+    var postalCode: String = "",
+    var totalSpent: Int = 0,
+    var totalOrders: Int = 0,
+    var acceptsMarketing: Boolean = false,
+    var taxExempt: Boolean = false
+) : RealmObject()

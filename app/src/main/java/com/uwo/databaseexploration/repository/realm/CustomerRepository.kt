@@ -10,19 +10,15 @@ import javax.inject.Inject
 class CustomerRepository @Inject constructor(
     private val customerDao: CustomerDao
 ): ICustomerRepository {
-    override fun getCustomers(): Flow<List<Customer>> {
-        return customerDao.getAllCustomers().map { customers ->
-            customers.map { customer ->
-                customer.toDomainCustomer()
-            }
+    override suspend fun getCustomers(): List<Customer> {
+        return customerDao.getAllCustomers().map { customer ->
+            customer.toDomainCustomer()
         }
     }
 
-    override fun findByName(firstName: String, lastName: String): Flow<List<Customer>> {
-        return customerDao.getCustomersByName(firstName = firstName, lastName = lastName).map { customers ->
-            customers.map { customer ->
-                customer.toDomainCustomer()
-            }
+    override suspend fun findByName(firstName: String, lastName: String): List<Customer> {
+        return customerDao.getCustomersByName(firstName = firstName, lastName = lastName).map { customer ->
+            customer.toDomainCustomer()
         }
     }
 }

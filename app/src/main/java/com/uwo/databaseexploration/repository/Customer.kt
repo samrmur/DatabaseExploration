@@ -17,7 +17,7 @@ data class Customer(
     val region: String,
     val country: String,
     val postalCode: String,
-    val totalSpent: String,
+    val totalSpent: Int,
     val totalOrders: Int,
     val acceptsMarketing: Boolean,
     val taxExempt: Boolean

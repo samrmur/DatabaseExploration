@@ -33,6 +33,8 @@ class DatabaseModule(
     private val realmDatabase = CustomerRealmDatabase(Realm.getInstance(realmConfig))
 
     init {
+        Realm.init(applicationContext)
+
         bind<CustomerRepository>().toProviderInstance(CustomerRepositoryProvider(
             roomDatabase = roomDatabase,
             realmDatabase = realmDatabase,

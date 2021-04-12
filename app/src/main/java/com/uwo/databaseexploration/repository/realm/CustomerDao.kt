@@ -1,14 +1,15 @@
 package com.uwo.databaseexploration.repository.realm
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import io.realm.Realm
 
-class CustomerDao {
-    fun getAllCustomers(): Flow<List<Customer>> {
-        return flow {  }
+class CustomerDao(private val realm: Realm) {
+    fun getAllCustomers(): List<Customer> {
+        val customerQuery = realm.where(Customer::class.java)
+        return customerQuery.findAll().toList()
     }
 
-    fun getCustomersByName(firstName: String, lastName: String): Flow<List<Customer>> {
-        return flow {  }
+    fun getCustomersByName(firstName: String, lastName: String): List<Customer> {
+        val customerQuery = realm.where(Customer::class.java)
+        return customerQuery.equalTo("firstName", firstName).equalTo("lastName", lastName).findAll().toList()
     }
 }

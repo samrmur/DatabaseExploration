@@ -1,4 +1,4 @@
-package com.uwo.databaseexploration.core
+package com.uwo.databaseexploration.core.scopes
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)

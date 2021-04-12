@@ -1,10 +1,8 @@
 package com.uwo.databaseexploration.core
 
 import android.app.Application
-import toothpick.Scope
+import com.uwo.databaseexploration.core.scopes.ApplicationScope
 import toothpick.ktp.KTP
-import toothpick.ktp.binding.bind
-import toothpick.ktp.binding.module
 
 class DatabaseApplication : Application() {
     override fun onCreate() {

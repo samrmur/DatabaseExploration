@@ -1,8 +1,6 @@
 package com.uwo.databaseexploration.repository
 
-import kotlinx.coroutines.flow.Flow
-
 interface CustomerRepository {
-    fun getCustomers(): Flow<List<Customer>>
-    fun findByName(firstName: String, lastName: String): Flow<List<Customer>>
+    suspend fun getCustomers(): List<Customer>
+    suspend fun findByName(firstName: String, lastName: String): List<Customer>
 }

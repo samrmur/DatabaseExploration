@@ -7,17 +7,27 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "30.0.3"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
     defaultConfig {
         applicationId "com.uwo.databaseexploration"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        compose true
+        viewBinding true
+    }
+
+    composeOptions {
+        kotlinCompilerVersion versions.kotlin
+        kotlinCompilerExtensionVersion versions.compose.main
     }
 
     buildTypes {
@@ -33,13 +43,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures {
-        viewBinding true
-    }
 }
 
 dependencies {
     implementation libraries.kotlin.main
+    implementation libraries.kotlin.jdk7
 
     implementation libraries.androidx.core
     implementation libraries.androidx.appcompat
@@ -51,9 +59,24 @@ dependencies {
     kapt libraries.room.compiler
 
     implementation libraries.toothpick.ktp
+    implementation libraries.toothpick.smoothie.androidx
+    implementation libraries.toothpick.smoothie.lifecycle
+    implementation libraries.toothpick.smoothie.viewModel
+    implementation libraries.toothpick.ktp
     kapt libraries.toothpick.compiler
+
+    implementation libraries.androidx.compose.ui
+    implementation libraries.androidx.compose.tooling
+    implementation libraries.androidx.compose.foundation
+    implementation libraries.androidx.compose.material
+    implementation libraries.androidx.compose.iconsCore
+    implementation libraries.androidx.compose.iconsExtended
+    implementation libraries.androidx.compose.activity
+    implementation libraries.androidx.compose.viewModel
+    implementation libraries.androidx.compose.liveData
 
     testImplementation libraries.junit.main
     androidTestImplementation libraries.androidx.test.junit
+    androidTestImplementation libraries.androidx.compose.junit
     androidTestImplementation libraries.androidx.test.espresso
 }
