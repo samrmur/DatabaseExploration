@@ -3,6 +3,7 @@ package com.uwo.databaseexploration.core
 import android.content.SharedPreferences
 import androidx.core.content.edit
 
+const val DATABASE_PREFERENCES_FILE = "cs4411_shared_prefs"
 const val DATABASE_USE_ROOM_FLAG = "USE_ROOM"
 
 fun SharedPreferences.shouldUseRoom(): Boolean {

@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DatabaseExploration">
-        <activity android:name="com.uwo.databaseexploration.ui.launch.LaunchActivity">
+        <activity
+            android:name="com.uwo.databaseexploration.ui.launch.LaunchActivity"
+            android:exported="true"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

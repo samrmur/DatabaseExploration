@@ -1,7 +1,6 @@
 package com.uwo.databaseexploration.core
 
 import android.app.Application
-import android.content.Context
 import androidx.room.Room
 import com.uwo.databaseexploration.repository.CustomerRepository
 import com.uwo.databaseexploration.repository.CustomerRepositoryProvider
@@ -16,29 +15,30 @@ class DatabaseModule(
     application: Application
 ): Module() {
     companion object {
-        private const val DATABASE_PREFERENCES = "database_preferences"
         private const val CUSTOMER_DATABASE = "customer-database"
     }
 
-    private val applicationContext = application.applicationContext
-
-    private val roomDatabase = Room.databaseBuilder(
-        applicationContext,
-        CustomerRoomDatabase::class.java,
-        CUSTOMER_DATABASE
-    ).build()
-
-    private val realmConfig = RealmConfiguration.Builder().build()
-
-    private val realmDatabase = CustomerRealmDatabase(Realm.getInstance(realmConfig))
-
     init {
+        val applicationContext = application.applicationContext
+
+        // Build room database
+        val roomDatabase = Room.databaseBuilder(
+            applicationContext,
+            CustomerRoomDatabase::class.java,
+            CUSTOMER_DATABASE
+        ).build()
+
+        // Initialize realm database
         Realm.init(applicationContext)
+
+        // Build realm database
+        val realmConfig = RealmConfiguration.Builder().build()
+        val realmDatabase = CustomerRealmDatabase(Realm.getInstance(realmConfig))
 
         bind<CustomerRepository>().toProviderInstance(CustomerRepositoryProvider(
             roomDatabase = roomDatabase,
             realmDatabase = realmDatabase,
-            sharedPreferences = applicationContext.getSharedPreferences(DATABASE_PREFERENCES, 0)
+            sharedPreferences = applicationContext.getSharedPreferences(DATABASE_PREFERENCES_FILE, 0)
         ))
     }
 }

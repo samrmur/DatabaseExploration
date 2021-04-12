@@ -1,7 +1,6 @@
 package com.uwo.databaseexploration.ui.launch
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
@@ -11,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,31 +17,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.uwo.databaseexploration.core.scopes.ApplicationScope
 import com.uwo.databaseexploration.core.scopes.ViewModelScope
+import com.uwo.databaseexploration.core.viewmodel.InjectedViewModelProvider
+import com.uwo.databaseexploration.core.viewmodel.provideActivityViewModel
 import toothpick.ktp.KTP
 import toothpick.ktp.delegate.inject
 import toothpick.smoothie.viewmodel.closeOnViewModelCleared
 import toothpick.smoothie.viewmodel.installViewModelBinding
+import javax.inject.Inject
 
 class LaunchActivity: AppCompatActivity() {
-    private val viewModel: LaunchViewModel by inject<LaunchViewModel>()
+    private val viewModel: LaunchViewModel by lazy {
+        provideActivityViewModel()
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        injectDependencies()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         setContent {
             MaterialTheme {
                 LaunchScreen()
             }
         }
-    }
-
-    private fun injectDependencies() {
-        KTP.openScope(ApplicationScope::class.java)
-            .openSubScope(ViewModelScope::class.java) { scope ->
-                scope.installViewModelBinding<LaunchViewModel>(activity = this)
-                    .closeOnViewModelCleared(activity = this)
-            }
     }
 
     @Composable
@@ -98,7 +92,6 @@ class LaunchActivity: AppCompatActivity() {
         Text(
             modifier = modifier,
             text = text,
-            color = Color.White,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
