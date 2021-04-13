@@ -14,28 +14,51 @@ class ProfiledCustomerRepository @Inject constructor(
         get() = _profiledResponse
 
     override suspend fun getCustomers(): List<Customer> {
-        val startTime = System.currentTimeMillis()
-        val results = customerRepository.getCustomers()
-        val endTime = System.currentTimeMillis()
-
-        _profiledResponse.emit(ProfiledCustomerResponse.Available(
-            timeTaken = endTime - startTime,
+        return runProfiledOperation(
+            operation = {
+                customerRepository.getCustomers()
+            },
             operationType = CustomerOperationType.GetAllCustomers
-        ))
-
-        return results
+        )
     }
 
     override suspend fun findByName(firstName: String, lastName: String): List<Customer> {
+        return runProfiledOperation(
+            operation = {
+                customerRepository.findByName(firstName, lastName)
+            },
+            operationType = CustomerOperationType.GetAllByName(firstName, lastName)
+        )
+    }
+
+    override suspend fun insertCustomers(customers: List<Customer>) {
+        return runProfiledOperation(
+            operation = {
+                customerRepository.insertCustomers(customers)
+            },
+            operationType = CustomerOperationType.InsertCustomers(numRows = customers.size)
+        )
+    }
+
+    override suspend fun deleteAllCustomers() {
+        return runProfiledOperation(
+            operation = {
+                customerRepository.deleteAllCustomers()
+            },
+            operationType = CustomerOperationType.DeleteAllCustomers
+        )
+    }
+
+    private suspend fun <Response> runProfiledOperation(operation: suspend () -> Response, operationType: CustomerOperationType): Response {
         val startTime = System.currentTimeMillis()
-        val results = customerRepository.findByName(firstName, lastName)
+        val response = operation.invoke()
         val endTime = System.currentTimeMillis()
 
         _profiledResponse.emit(ProfiledCustomerResponse.Available(
             timeTaken = endTime - startTime,
-            operationType = CustomerOperationType.GetAllByName(firstName, lastName)
+            operationType = operationType
         ))
 
-        return results
+        return response
     }
 }

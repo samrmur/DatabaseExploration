@@ -31,9 +31,13 @@ class DatabaseModule(
         // Initialize realm database
         Realm.init(applicationContext)
 
+        // Build configuration
+        val realmConfig = RealmConfiguration.Builder()
+            .deleteRealmIfMigrationNeeded()
+            .build()
+
         // Build realm database
-        val realmConfig = RealmConfiguration.Builder().build()
-        val realmDatabase = CustomerRealmDatabase(Realm.getInstance(realmConfig))
+        val realmDatabase = CustomerRealmDatabase(realmConfig = realmConfig)
 
         bind<CustomerRepository>().toProviderInstance(CustomerRepositoryProvider(
             roomDatabase = roomDatabase,

@@ -1,11 +1,9 @@
 package com.uwo.databaseexploration.repository.realm
 
-import io.realm.Realm
+import io.realm.RealmConfiguration
 
-class CustomerDatabase constructor(
-    realm: Realm
-) {
-    private val customerDao = CustomerDao(realm)
+class CustomerDatabase(realmConfig: RealmConfiguration) {
+    private val customerDao = CustomerDao(realmConfig = realmConfig)
 
     fun customerDao() = customerDao
 }

@@ -1,5 +1,6 @@
 package com.uwo.databaseexploration.ui.launch
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import com.uwo.databaseexploration.core.scopes.ApplicationScope
 import com.uwo.databaseexploration.core.scopes.ViewModelScope
 import com.uwo.databaseexploration.core.viewmodel.InjectedViewModelProvider
 import com.uwo.databaseexploration.core.viewmodel.provideActivityViewModel
+import com.uwo.databaseexploration.ui.customers.CustomersActivity
 import toothpick.ktp.KTP
 import toothpick.ktp.delegate.inject
 import toothpick.smoothie.viewmodel.closeOnViewModelCleared
@@ -32,6 +34,12 @@ class LaunchActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.action.observe(this, { action ->
+            when (action) {
+                is LaunchAction.NavigateToCustomers -> startActivity(Intent(this, CustomersActivity::class.java))
+            }
+        })
 
         setContent {
             MaterialTheme {

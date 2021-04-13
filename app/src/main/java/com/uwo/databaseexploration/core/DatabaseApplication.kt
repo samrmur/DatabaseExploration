@@ -11,7 +11,8 @@ class DatabaseApplication : Application() {
         KTP.openScope(ApplicationScope::class.java)
             .installModules(
                 ApplicationModule(application = this),
-                DatabaseModule(application = this)
+                DatabaseModule(application = this),
+                CustomerModule(application = this)
             )
     }
 }

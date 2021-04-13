@@ -24,6 +24,52 @@ data class Customer(
 )
 
 /**
+ * Converts a domain customer to a room customer
+ * @returns RoomCustomer
+ */
+fun Customer.toRoomCustomer(): RoomCustomer {
+    return RoomCustomer(
+        id = id,
+        firstName = firstName,
+        lastName = lastName,
+        phone = phone,
+        company = company,
+        streetAddress = streetAddress,
+        city = city,
+        region = region,
+        country = country,
+        postalCode = postalCode,
+        totalSpent = totalSpent,
+        totalOrders = totalOrders,
+        acceptsMarketing = acceptsMarketing,
+        taxExempt = taxExempt
+    )
+}
+
+/**
+ * Converts a domain customer to a realm customer
+ * @returns RoomCustomer
+ */
+fun Customer.toRealmCustomer(): RealmCustomer {
+    return RealmCustomer(
+        id = id,
+        firstName = firstName,
+        lastName = lastName,
+        phone = phone,
+        company = company,
+        streetAddress = streetAddress,
+        city = city,
+        region = region,
+        country = country,
+        postalCode = postalCode,
+        totalSpent = totalSpent,
+        totalOrders = totalOrders,
+        acceptsMarketing = acceptsMarketing,
+        taxExempt = taxExempt
+    )
+}
+
+/**
  * Converts a room customer into a domain customer
  * @return Customer
  */

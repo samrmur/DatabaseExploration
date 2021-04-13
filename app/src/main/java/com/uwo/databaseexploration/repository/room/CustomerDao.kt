@@ -1,9 +1,6 @@
 package com.uwo.databaseexploration.repository.room
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -13,4 +10,11 @@ interface CustomerDao {
 
     @Query("SELECT * FROM customer WHERE first_name LIKE :firstName AND last_name LIKE :lastName")
     fun findByName(firstName: String, lastName: String): List<Customer>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(customers: List<Customer>)
+
+    @Query("DELETE FROM customer")
+    fun deleteAll()
+
 }
