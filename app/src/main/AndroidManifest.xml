@@ -22,6 +22,14 @@
             android:name="com.uwo.databaseexploration.ui.customers.CustomersActivity"
             android:parentActivityName=".ui.launch.LaunchActivity"
         />
+        <activity
+            android:name=".ui.name.EnterNameActivity"
+            android:parentActivityName=".ui.customers.CustomersActivity"
+        />
+        <activity
+            android:name=".ui.orders.EnterOrdersActivity"
+            android:parentActivityName=".ui.customers.CustomersActivity"
+        />
     </application>
 
 </manifest>

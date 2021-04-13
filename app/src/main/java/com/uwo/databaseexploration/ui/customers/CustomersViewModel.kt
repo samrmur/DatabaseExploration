@@ -66,6 +66,8 @@ class CustomersViewModel @Inject constructor(
             is CustomersViewAction.OnSearchByNameClicked -> _action.postValue(CustomersAction.NavigateToNameQueryScreen)
             is CustomersViewAction.OnSearchByTotalOrdersClicked -> _action.postValue(CustomersAction.NavigateToTotalOrdersQueryScreen)
             is CustomersViewAction.OnFilePicked -> handleImport(uri = action.uri)
+            is CustomersViewAction.OnNameQueryReceived -> getCustomerByName(firstName = action.firstName, lastName = action.lastName)
+            is CustomersViewAction.OnOrdersQueryReceived -> Unit
         }
     }
 

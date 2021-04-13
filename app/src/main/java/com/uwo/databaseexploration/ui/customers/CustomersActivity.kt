@@ -1,5 +1,6 @@
 package com.uwo.databaseexploration.ui.customers
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
+import com.uwo.databaseexploration.ui.name.EnterNameActivity
 import kotlinx.coroutines.launch
 
 class CustomersActivity: AppCompatActivity() {
@@ -52,7 +54,7 @@ class CustomersActivity: AppCompatActivity() {
                 is CustomersAction.DisplayError -> showSnackBar(
                     message = "Error: ${action.message}"
                 )
-                is CustomersAction.NavigateToNameQueryScreen -> Unit
+                is CustomersAction.NavigateToNameQueryScreen -> startActivityForResult(Intent(this, EnterNameActivity::class.java), 1001)
                 is CustomersAction.NavigateToTotalOrdersQueryScreen -> Unit
                 is CustomersAction.NavigateBack -> finish()
                 is CustomersAction.OpenCsvFilePicker -> launchGetContent.launch("*/*")
@@ -63,6 +65,20 @@ class CustomersActivity: AppCompatActivity() {
             MaterialTheme {
                 CustomersScreen()
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            1001 -> {
+                val firstName = data?.getStringExtra("FIRST")
+                val lastName = data?.getStringExtra("LAST")
+
+                if (firstName != null && lastName != null) {
+                    viewModel.handleViewAction(CustomersViewAction.OnNameQueryReceived(firstName = firstName, lastName = lastName))
+                }
+            }
+            else -> super.onActivityResult(requestCode, resultCode, data)
         }
     }
 

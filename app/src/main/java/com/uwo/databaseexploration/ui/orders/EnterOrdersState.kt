@@ -7,6 +7,6 @@ enum class OrderQueryType {
 }
 
 data class EnterOrdersState(
-    val queryType: OrderQueryType,
-    val numOrders: Int
+    val queryType: OrderQueryType = OrderQueryType.EQUAL,
+    val numOrders: Int = 0
 )
