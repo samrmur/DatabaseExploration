@@ -57,11 +57,13 @@ class LaunchActivity: AppCompatActivity() {
 
     @Composable
     private fun LaunchView(isUsingRoom: Boolean) {
-        Column {
-            TopAppBar(title = {
-                Text(text = "Pick database to use")
-            })
-
+        Scaffold(
+            topBar = {
+                TopAppBar(title = {
+                    Text(text = "Pick database to use")
+                })
+            }
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -69,7 +71,9 @@ class LaunchActivity: AppCompatActivity() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(modifier = Modifier.fillMaxWidth().padding(bottom = 25.dp)) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 25.dp)) {
                     DatabaseOption(
                         modifier = Modifier.weight(1F),
                         text = "Realm"

@@ -106,7 +106,6 @@ class CustomersActivity: AppCompatActivity() {
     }
 
     private fun showSnackBar(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         lifecycleScope.launch {
             snackBarHostState.showSnackbar(
                 message = message,
@@ -124,31 +123,37 @@ class CustomersActivity: AppCompatActivity() {
 
     @Composable
     private fun CustomersView(state: CustomersState, databaseType: String) {
-        Column(
-            modifier = Modifier.fillMaxHeight().fillMaxWidth()
-        ) {
-            TopAppBar(
-                title = {
-                    Text(text = "Customers in $databaseType context")
-                },
-                actions = {
-                    CustomerOverflowMenu()
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            viewModel.handleViewAction(CustomersViewAction.OnBackClicked)
-                        },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
-                    )
+        Scaffold(
+            scaffoldState = rememberScaffoldState(snackbarHostState = snackBarHostState),
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "Customers in $databaseType context")
+                    },
+                    actions = {
+                        CustomerOverflowMenu()
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                viewModel.handleViewAction(CustomersViewAction.OnBackClicked)
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
+                )
+            },
+            snackbarHost = { hostState ->
+                SnackbarHost(hostState = hostState) { snackBarData ->
+                    Snackbar(snackbarData = snackBarData)
                 }
-            )
-
+            }
+        ) {
             when (state) {
                 is CustomersState.Loading -> {
                     Column(
@@ -200,8 +205,6 @@ class CustomersActivity: AppCompatActivity() {
                     }
                 }
             }
-
-            ProfiledSnackBar()
         }
     }
 
@@ -297,18 +300,6 @@ class CustomersActivity: AppCompatActivity() {
             )
         }
         Divider()
-    }
-
-    @Composable
-    private fun ProfiledSnackBar() {
-        val hostState by remember { mutableStateOf(snackBarHostState) }
-
-        SnackbarHost(
-            hostState = hostState,
-            snackbar = { snackBarData ->
-                Snackbar(snackbarData = snackBarData)
-            }
-        )
     }
 
     @Preview

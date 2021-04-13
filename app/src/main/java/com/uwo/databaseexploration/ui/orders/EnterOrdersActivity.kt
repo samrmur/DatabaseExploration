@@ -64,26 +64,28 @@ class EnterOrdersActivity: AppCompatActivity() {
 
     @Composable
     private fun EnterOrdersView(state: EnterOrdersState) {
-        Column {
-            TopAppBar(
-                title = {
-                    Text(text = "Enter orders query")
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            viewModel.handleViewAction(EnterOrdersViewAction.OnBackClicked)
-                        },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
-                    )
-                }
-            )
-
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "Enter orders query")
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                viewModel.handleViewAction(EnterOrdersViewAction.OnBackClicked)
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
+                )
+            }
+        ) {
             Column(
                 modifier = Modifier
                     .padding(20.dp)
@@ -98,7 +100,9 @@ class EnterOrdersActivity: AppCompatActivity() {
                         .padding(bottom = 20.dp)
                 ) {
                     QueryTypeMenu(
-                        modifier = Modifier.weight(10f).align(Alignment.Bottom),
+                        modifier = Modifier
+                            .weight(10f)
+                            .align(Alignment.Bottom),
                         state = state
                     )
                     Spacer(modifier = Modifier.weight(1f))

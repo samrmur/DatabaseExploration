@@ -53,26 +53,28 @@ class EnterNameActivity: AppCompatActivity() {
 
     @Composable
     private fun EnterNameView(state: EnterNameState) {
-        Column {
-            TopAppBar(
-                title = {
-                    Text(text = "Enter name query")
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            viewModel.handleViewAction(EnterNameViewAction.OnBackClicked)
-                        },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
-                    )
-                }
-            )
-
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "Enter name query")
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                viewModel.handleViewAction(EnterNameViewAction.OnBackClicked)
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
+                )
+            }
+        ) {
             Column(
                 modifier = Modifier
                     .padding(20.dp)
