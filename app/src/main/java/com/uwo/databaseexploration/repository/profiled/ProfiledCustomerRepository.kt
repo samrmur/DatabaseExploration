@@ -1,6 +1,7 @@
 package com.uwo.databaseexploration.repository.profiled
 
 import com.uwo.databaseexploration.repository.Customer
+import com.uwo.databaseexploration.repository.CustomerOrdersQueryType
 import com.uwo.databaseexploration.repository.CustomerRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +29,18 @@ class ProfiledCustomerRepository @Inject constructor(
                 customerRepository.findByName(firstName, lastName)
             },
             operationType = CustomerOperationType.GetAllByName(firstName, lastName)
+        )
+    }
+
+    override suspend fun findByOrders(
+        queryType: CustomerOrdersQueryType,
+        numOrders: Int
+    ): List<Customer> {
+        return runProfiledOperation(
+            operation = {
+                customerRepository.findByOrders(queryType = queryType, numOrders = numOrders)
+            },
+            operationType = CustomerOperationType.GetAllByOrders(ordersQueryType = queryType, numOrders = numOrders)
         )
     }
 

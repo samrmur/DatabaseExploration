@@ -28,9 +28,11 @@ class EnterNameActivity: AppCompatActivity() {
         viewModel.action.observe(this, { action ->
             when (action) {
                 is EnterNameAction.NavigateBack -> finish()
-                is EnterNameAction.NavigateBackWithQuery -> finishWithResult(101) {
-                    putExtra("FIRST", action.firstName)
-                    putExtra("LAST", action.lastName)
+                is EnterNameAction.NavigateBackWithQuery -> {
+                    finishWithResult(EnterNameContract.RESULT_CODE) {
+                        putExtra(EnterNameContract.FIRST_NAME_EXTRA, action.firstName)
+                        putExtra(EnterNameContract.LAST_TIME_EXTRA, action.lastName)
+                    }
                 }
             }
         })

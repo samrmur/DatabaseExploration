@@ -11,6 +11,15 @@ interface CustomerDao {
     @Query("SELECT * FROM customer WHERE first_name LIKE :firstName AND last_name LIKE :lastName")
     fun findByName(firstName: String, lastName: String): List<Customer>
 
+    @Query("SELECT * FROM customer WHERE total_orders > :totalOrders")
+    fun findGreaterThan(totalOrders: Int): List<Customer>
+
+    @Query("SELECT * FROM customer WHERE total_orders = :totalOrders")
+    fun findEqualTo(totalOrders: Int): List<Customer>
+
+    @Query("SELECT * FROM customer WHERE total_orders < :totalOrders")
+    fun findLessThan(totalOrders: Int): List<Customer>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(customers: List<Customer>)
 

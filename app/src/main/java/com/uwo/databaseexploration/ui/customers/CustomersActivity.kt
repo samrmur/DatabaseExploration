@@ -25,6 +25,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.uwo.databaseexploration.ui.name.EnterNameActivity
+import com.uwo.databaseexploration.ui.name.EnterNameContract
+import com.uwo.databaseexploration.ui.orders.EnterOrdersContract
 import kotlinx.coroutines.launch
 
 class CustomersActivity: AppCompatActivity() {
@@ -36,8 +38,29 @@ class CustomersActivity: AppCompatActivity() {
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let { validUri ->
-            Log.d(this::class.java.simpleName, "Sending action")
             viewModel.handleViewAction(CustomersViewAction.OnFilePicked(uri = validUri))
+        }
+    }
+
+    private val launchEnterName = registerForActivityResult(
+        EnterNameContract()
+    ) { state ->
+        state?.let { validState ->
+            viewModel.handleViewAction(CustomersViewAction.OnNameQueryReceived(
+                firstName = validState.firstName,
+                lastName = validState.lastName
+            ))
+        }
+    }
+
+    private val launchEnterOrders = registerForActivityResult(
+        EnterOrdersContract()
+    ) { state ->
+        state?.let { validState ->
+            viewModel.handleViewAction(CustomersViewAction.OnOrdersQueryReceived(
+                queryType = validState.queryType,
+                numOrders = validState.numOrders
+            ))
         }
     }
 
@@ -54,8 +77,8 @@ class CustomersActivity: AppCompatActivity() {
                 is CustomersAction.DisplayError -> showSnackBar(
                     message = "Error: ${action.message}"
                 )
-                is CustomersAction.NavigateToNameQueryScreen -> startActivityForResult(Intent(this, EnterNameActivity::class.java), 1001)
-                is CustomersAction.NavigateToTotalOrdersQueryScreen -> Unit
+                is CustomersAction.NavigateToNameQueryScreen -> launchEnterName.launch(Unit)
+                is CustomersAction.NavigateToTotalOrdersQueryScreen -> launchEnterOrders.launch(Unit)
                 is CustomersAction.NavigateBack -> finish()
                 is CustomersAction.OpenCsvFilePicker -> launchGetContent.launch("*/*")
             }

@@ -17,6 +17,21 @@ class CustomerDao(
         return customerQuery.equalTo("firstName", firstName).equalTo("lastName", lastName).findAll().toList()
     }
 
+    fun getCustomersGreaterThanOrders(totalOrders: Int): List<Customer> {
+        val customerQuery = getRealmInstance().where(Customer::class.java)
+        return customerQuery.greaterThan("totalOrders", totalOrders).findAll().toList()
+    }
+
+    fun getCustomersEqualToOrders(totalOrders: Int): List<Customer> {
+        val customerQuery = getRealmInstance().where(Customer::class.java)
+        return customerQuery.equalTo("totalOrders", totalOrders).findAll().toList()
+    }
+
+    fun getCustomersLessThanOrders(totalOrders: Int): List<Customer> {
+        val customerQuery = getRealmInstance().where(Customer::class.java)
+        return customerQuery.lessThan("totalOrders", totalOrders).findAll().toList()
+    }
+
     suspend fun insertCustomers(customers: List<Customer>) {
         getRealmInstance().executeTransactionAwait { realm ->
             realm.insertOrUpdate(customers)

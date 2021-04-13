@@ -9,9 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.uwo.databaseexploration.core.shouldUseRoom
 import com.uwo.databaseexploration.csv.CustomerCsvReader
 import com.uwo.databaseexploration.repository.Customer
+import com.uwo.databaseexploration.repository.CustomerOrdersQueryType
 import com.uwo.databaseexploration.repository.profiled.CustomerOperationType
 import com.uwo.databaseexploration.repository.profiled.ProfiledCustomerRepository
 import com.uwo.databaseexploration.repository.profiled.ProfiledCustomerResponse
+import com.uwo.databaseexploration.ui.orders.OrderQueryType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -40,6 +42,15 @@ class CustomersViewModel @Inject constructor(
                         is CustomerOperationType.GetAllByName -> "getCustomersByName(firstName: ${operationType.firstName}, lastName: ${operationType.lastName})"
                         is CustomerOperationType.InsertCustomers -> "insertCustomers(numRows: ${operationType.numRows})"
                         is CustomerOperationType.DeleteAllCustomers -> "deleteAllCustomers()"
+                        is CustomerOperationType.GetAllByOrders -> {
+                            val queryType = when (operationType.ordersQueryType) {
+                                is CustomerOrdersQueryType.GreaterThan -> "greaterThan"
+                                is CustomerOrdersQueryType.EqualTo -> "equalTo"
+                                is CustomerOrdersQueryType.LessThan -> "lessThan"
+                            }
+
+                            "getCustomersByName(queryType: ${queryType}, numOrders: ${operationType.numOrders})"
+                        }
                     }
 
                     _action.postValue(CustomersAction.DisplayProfiledOperation(
@@ -66,8 +77,8 @@ class CustomersViewModel @Inject constructor(
             is CustomersViewAction.OnSearchByNameClicked -> _action.postValue(CustomersAction.NavigateToNameQueryScreen)
             is CustomersViewAction.OnSearchByTotalOrdersClicked -> _action.postValue(CustomersAction.NavigateToTotalOrdersQueryScreen)
             is CustomersViewAction.OnFilePicked -> handleImport(uri = action.uri)
-            is CustomersViewAction.OnNameQueryReceived -> getCustomerByName(firstName = action.firstName, lastName = action.lastName)
-            is CustomersViewAction.OnOrdersQueryReceived -> Unit
+            is CustomersViewAction.OnNameQueryReceived -> getCustomersByName(firstName = action.firstName, lastName = action.lastName)
+            is CustomersViewAction.OnOrdersQueryReceived -> getCustomersByOrders(queryType = action.queryType, numOrders = action.numOrders)
         }
     }
 
@@ -89,7 +100,7 @@ class CustomersViewModel @Inject constructor(
     private fun onRefresh() {
         when (val state = _operationState.value) {
             is CustomersOperationState.AllCustomers -> getAllCustomers()
-            is CustomersOperationState.CustomersByName -> getCustomerByName(firstName = state.firstName, lastName = state.lastName)
+            is CustomersOperationState.CustomersByName -> getCustomersByName(firstName = state.firstName, lastName = state.lastName)
         }
     }
 
@@ -110,7 +121,21 @@ class CustomersViewModel @Inject constructor(
         }
     }
 
-    private fun getCustomerByName(firstName: String, lastName: String) {
+    private fun getCustomersByOrders(queryType: OrderQueryType, numOrders: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val convertedQueryType = when (queryType) {
+                OrderQueryType.LESS_THAN -> CustomerOrdersQueryType.LessThan
+                OrderQueryType.EQUAL -> CustomerOrdersQueryType.EqualTo
+                OrderQueryType.BIGGER_THAN -> CustomerOrdersQueryType.GreaterThan
+            }
+
+            runCustomersOperation {
+                profiledCustomerRepository.findByOrders(queryType = convertedQueryType, numOrders = numOrders)
+            }
+        }
+    }
+
+    private fun getCustomersByName(firstName: String, lastName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             runCustomersOperation {
                 profiledCustomerRepository.findByName(firstName = firstName, lastName = lastName)
